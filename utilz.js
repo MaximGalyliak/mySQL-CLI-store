@@ -1,7 +1,6 @@
 //Utilz
 function outputTable(){
-
-
+    
 }
 //for inq input validaion
 function validateIfNumber(input) {
