@@ -1,0 +1,23 @@
+{
+  "name": "mysql-cli-store",
+  "version": "1.0.0",
+  "description": "CLI mySQL store app",
+  "main": "store.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaximGalyliak/mySQL-CLI-store.git"
+  },
+  "author": "MaximG",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MaximGalyliak/mySQL-CLI-store/issues"
+  },
+  "homepage": "https://github.com/MaximGalyliak/mySQL-CLI-store#readme",
+  "dependencies": {
+    "inquirer": "^5.2.0",
+    "mysql": "^2.15.0"
+  }
+}
