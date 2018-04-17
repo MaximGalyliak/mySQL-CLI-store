@@ -26,8 +26,8 @@ connection.connect((error) => {
                 }
             ]).then((resp) => {
                 switch (resp.login) {
-                    case 'customer': return customer();
-                    case 'manager': return manager();
+                    case 'customer': customer(); connection.end(); break;
+                    case 'manager': manager(); connection.end(); break;
                     case 'superviser': console.log('You are superviser now'); break;
                     default: console.log("Sorry I didn't get that.");
                 }

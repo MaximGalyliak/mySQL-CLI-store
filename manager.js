@@ -94,6 +94,48 @@ function addQuantity(){
 }
 
 function addProduct(){
-    
+    INQ.prompt([
+        {
+            type: 'input',
+            message: 'Please enter product name',
+            name: 'productName',
+            validate: UTILZ.validateIfNotEmpty,
+        },
+        {
+            type: 'input',
+            message: 'Please enter product department',
+            name: 'productDepartment',
+            validate: UTILZ.validateIfNotEmpty,
+        },
+        {
+            type: 'input',
+            message: 'Please enter product price',
+            name: 'productPrice',
+            validate: UTILZ.validateIfNumber,
+        },
+        {
+            type: 'input',
+            message: 'Please enter product quantity',
+            name: 'productQuantity',
+            validate: UTILZ.validateIfNumber,
+        },
+    ]).then(inqResp=>{
+        connection.query(
+            `insert into 
+            productstb(product_name, department_name, price, stock_quntity) 
+            values(
+                "${inqResp.productName}", 
+                "${inqResp.productDepartment}", 
+                "${inqResp.productPrice}", 
+                "${inqResp.productQuantity}"
+            )`,
+            (err, insResp)=>{
+                if(err) throw err;
+                console.log("Success!");
+                manager();
+            }
+        );
+    });
 }
+
 module.exports = manager;

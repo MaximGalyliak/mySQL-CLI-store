@@ -17,7 +17,10 @@ function outputTable(sql_response) {
 }
 //for inq input validaion
 function validateIfNumber(input) {
-    return /^\d+$/.test(input) || "Should be a number!";
+    return /[-+]?[0-9]*\.?[0-9]+/.test(input) || "Should be a number!";
+}
+function validateIfNotEmpty(input){
+    return !/^$/.test(input)||"Can't be empty";
 }
 //for inq list choices
 function sqlResToArr(sql_response_arr, ...field_names) {
@@ -30,4 +33,4 @@ function sqlResToArr(sql_response_arr, ...field_names) {
     return newArr;
 }
 
-module.exports = { outputTable, validateIfNumber, sqlResToArr };
+module.exports = { outputTable, validateIfNumber, sqlResToArr, validateIfNotEmpty };
