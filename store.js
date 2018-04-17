@@ -2,6 +2,7 @@ const INQ = require('inquirer');
 const SQL = require('mysql');
 const customer = require('./customer');
 const manager = require('./manager');
+const superviser = require('./superviser');
 const UTILZ = require('./utilz');
 
 const connection = SQL.createConnection({
@@ -28,6 +29,7 @@ connection.connect((error) => {
                 switch (resp.login) {
                     case 'customer': customer(); connection.end(); break;
                     case 'manager': manager(); connection.end(); break;
+                    case 'superviser': superviser(); connection.end(); break;
                     default: console.log("Sorry I didn't get that.");
                 }
             });

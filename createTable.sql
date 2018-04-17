@@ -7,11 +7,18 @@
      product_name varchar(30) unique not null,
      department_name varchar(30),
      price float(16) not null,
-     stock_quntity int(16) not null
+     stock_quantity int(16) not null,
+     product_sales int(16) default 0
+ );
+ 
+ create table departmentsTB(
+	id int auto_increment primary key,
+	department_name varchar(30) not null,
+    overhead int(16) not null
  );
  
  insert into 
-	productsTB(product_name, department_name, price, stock_quntity) 
+	productsTB(product_name, department_name, price, stock_quantity) 
  values 
 	('banana', 'fruits', 0.59, 200),
 	('strawberries','fruits', 1.99, 20),

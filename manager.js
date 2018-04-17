@@ -43,10 +43,15 @@ function showAll() {
 
 function showLow() {
     connection.query(
-        'SELECT product_name, stock_quntity FROM productstb WHERE stock_quntity < 5',
+        'SELECT product_name, stock_quantity FROM productstb WHERE stock_quantity < 5',
         (err, selectLow) => {
             if (err) throw err;
-            UTILZ.outputTable(selectLow);
+            if (selectLow.length!=0){
+                UTILZ.outputTable(selectLow);
+            }else{
+                console.log("No items to display");
+            }
+            
             manager();
         }
     );
@@ -73,13 +78,13 @@ function addQuantity(){
             ]).then((inqResp) => {
                 var id = inqResp.productName.slice(0, inqResp.productName.indexOf(','));
                 connection.query(
-                    `select stock_quntity from productstb where productstb.id ="${id}"`,
+                    `select stock_quantity from productstb where productstb.id ="${id}"`,
                     (err, selResp)=>{
                         if(err) throw err;
-                        var updatedQuantity = selResp[0].stock_quntity + parseInt(inqResp.amount);
+                        var updatedQuantity = selResp[0].stock_quantity + parseInt(inqResp.amount);
                         console.log(updatedQuantity);
                         connection.query(
-                            `update productstb set stock_quntity = "${updatedQuantity}" where productstb.id ="${id}"`,
+                            `update productstb set stock_quantity = "${updatedQuantity}" where productstb.id ="${id}"`,
                             (error, updResp) => {
                                 if (error) throw error;
                                 console.log('Success!');
@@ -122,7 +127,7 @@ function addProduct(){
     ]).then(inqResp=>{
         connection.query(
             `insert into 
-            productstb(product_name, department_name, price, stock_quntity) 
+            productstb(product_name, department_name, price, stock_quantity) 
             values(
                 "${inqResp.productName}", 
                 "${inqResp.productDepartment}", 

@@ -30,22 +30,28 @@ function customer() {
             ]).then((inqResp) => {
                 var id = inqResp.productName.slice(0, inqResp.productName.indexOf(','));
                 connection.query(
-                    `select stock_quntity, price from productstb where productstb.id ="${id}"`,
+                    `select stock_quantity, price from productstb where productstb.id ="${id}"`,
                     (error, sqlResp) => {
                         if (error) throw error;
-                        if (sqlResp[0].stock_quntity < parseInt(inqResp.quantity)) {
+                        if (sqlResp[0].stock_quantity < parseInt(inqResp.quantity)) {
                             console.log("too many");
                             connection.end();
                         } else {
                             var Total = parseInt(inqResp.quantity) * parseFloat(sqlResp[0].price);
                             console.log('Total price: $', Total);//give customer final bill;
-                            var newQuantity = sqlResp[0].stock_quntity - parseInt(inqResp.quantity);
+                            var newQuantity = sqlResp[0].stock_quantity - parseInt(inqResp.quantity);
                             connection.query(
-                                `UPDATE productstb SET stock_quntity ="${newQuantity}" where productstb.id ="${id}"`,
+                                `UPDATE productstb SET stock_quantity ="${newQuantity}" WHERE productstb.id ="${id}"`,
                                 (e, r) => {
                                     if (e) throw e;
-                                    console.log('Transaction complete!');
-                                    connection.end();
+                                    connection.query(
+                                        `UPDATE productstb SET product_sales="${inqResp.quantity}" WHERE productstb.id="${id}"`,
+                                        (er, re) => {
+                                            if (er) throw er;
+                                            console.log('Transaction complete!');
+                                            connection.end();
+                                        }
+                                    )
                                 }
                             );
                         }
