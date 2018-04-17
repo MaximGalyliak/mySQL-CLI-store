@@ -40,8 +40,9 @@ function customer() {
                             var Total = parseInt(inqResp.quantity) * parseFloat(sqlResp[0].price);
                             console.log('Total price: $', Total);//give customer final bill;
                             var newQuantity = sqlResp[0].stock_quntity - parseInt(inqResp.quantity);
+                            console.log(newQuantity);
                             connection.query(
-                                `UPDATE productstb SET productstb.stock_quntity =${newQuantity} where productstb.product_name ="${inqResp.productName}"`,
+                                `UPDATE productstb SET stock_quntity ="${newQuantity}" where productstb.id ="${id}"`,
                                 (e, r) => {
                                     if (e) throw e;
                                     console.log('Transaction complete!');
