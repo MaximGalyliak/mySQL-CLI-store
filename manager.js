@@ -52,7 +52,7 @@ function showLow() {
 }
 
 function addQuantity() {
-    connection.query('SELECT id,product_name FROM productstb ORDER BY id', (err, masterSelectRes) => {
+    connection.query('SELECT id, product_name FROM productstb ORDER BY id', (err, masterSelectRes) => {
         if (err) throw err;
         INQ.prompt([
             {
@@ -71,14 +71,14 @@ function addQuantity() {
 
             var getId = inqResp.productName.slice(0, inqResp.productName.indexOf(','));
 
-            var selectQuantityQ = `select stock_quantity from productstb where productstb.id ="${id}"`;
+            var selectQuantityQ = `select stock_quantity from productstb where productstb.id ="${getId}"`;
 
             connection.query(selectQuantityQ, (err, selResp) => {
                 if (err) throw err;
 
                 var updatedQuantity = selResp[0].stock_quantity + parseInt(inqResp.amount);
 
-                var updateStockQ = `update productstb set stock_quantity = "${updatedQuantity}" where productstb.id ="${id}"`;
+                var updateStockQ = `update productstb set stock_quantity = "${updatedQuantity}" where productstb.id ="${getId}"`;
 
                 connection.query(updateStockQ, (error, updResp) => {
                     if (error) throw error;
