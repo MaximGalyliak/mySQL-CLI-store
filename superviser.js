@@ -9,7 +9,7 @@ const connection = SQL.createConnection({
     database: 'storedb'
 });
 
-function superviser(){
+function superviser() {
     INQ.prompt([
         {
             type: 'list',
@@ -17,8 +17,8 @@ function superviser(){
             choices: ['View Product Sales by Department', 'Create New Department', 'Exit'],
             name: 'choice'
         }
-    ]).then(inqResp=>{
-        switch(inqResp.choice){
+    ]).then(inqResp => {
+        switch (inqResp.choice) {
             case 'View Product Sales by Department': viewByDep(); break;
             case 'Create New Department': createNewDep(); break;
             case 'Exit': connection.end(); break;
@@ -27,14 +27,24 @@ function superviser(){
     });
 };
 
-function viewByDep(){
-    connection.query(
-        ``
-    )
+function viewByDep() {
 
+    var OMGTHISQUERY = `
+    SELECT departmentstb.id, productstb.department_name, departmentstb.overhead, sum(productstb.product_sales)-departmentstb.overhead as profit
+    FROM departmentstb 
+    JOIN productstb 
+    ON departmentstb.department_name = productstb.department_name
+    GROUP BY productstb.department_name 
+    ORDER BY id;`
+
+    connection.query(OMGTHISQUERY, (error, joinResp) => {
+        if (error) throw error;
+        UTILZ.outputTable(joinResp);
+        superviser();
+    });
 };
 
-function createNewDep(){
+function createNewDep() {
     INQ.prompt([
         {
             type: 'input',
@@ -46,22 +56,15 @@ function createNewDep(){
             type: 'input',
             message: 'Please enter overhead cost',
             name: 'overheadCost',
-            validate:UTILZ.validateIfNumber,
+            validate: UTILZ.validateIfNumber,
         }
-    ]).then(inqResp=>{
-        connection.query(
-            `insert into 
-            departmentstb(department_name, overhead) 
-            values(
-                "${inqResp.departmentName}", 
-                "${inqResp.overheadCost}"
-            )`,
-            (err, insResp)=>{
-                if(err) throw err;
-                console.log("Success!");
-                superviser();
-            }
-        );
+    ]).then(inqResp => {
+        var addNewDepartmentQ = `insert into departmentstb(department_name, overhead) values("${inqResp.departmentName}",  "${inqResp.overheadCost}")`;
+        connection.query(insertNewDepartmentQ, (err, insertResp) => {
+            if (err) throw err;
+            console.log("Success!");
+            superviser();
+        });
     });
 };
 

@@ -31,74 +31,66 @@ function manager() {
 }
 
 function showAll() {
-    connection.query(
-        'SELECT product_name FROM productstb',
-        (err, selectResp) => {
-            if (err) throw err;
-            UTILZ.outputTable(selectResp);
-            manager();
-        }
-    );
+    connection.query('SELECT product_name FROM productstb', (err, selectResp) => {
+        if (err) throw err;
+        UTILZ.outputTable(selectResp);
+        manager();
+    });
 }
 
 function showLow() {
-    connection.query(
-        'SELECT product_name, stock_quantity FROM productstb WHERE stock_quantity < 5',
-        (err, selectLow) => {
-            if (err) throw err;
-            if (selectLow.length!=0){
-                UTILZ.outputTable(selectLow);
-            }else{
-                console.log("No items to display");
+    var selectWhereLessQ = 'SELECT product_name, stock_quantity FROM productstb WHERE stock_quantity < 5';
+    connection.query(selectWhereLessQ, (err, selectResp) => {
+        if (err) throw err;
+        if (selectResp.length != 0) {
+            UTILZ.outputTable(selectResp);
+        } else {
+            console.log("No items to display");
+        }
+        manager();
+    });
+}
+
+function addQuantity() {
+    connection.query('SELECT id,product_name FROM productstb ORDER BY id', (err, masterSelectRes) => {
+        if (err) throw err;
+        INQ.prompt([
+            {
+                type: 'list',
+                message: 'Which product you would like to stock up?',
+                choices: UTILZ.sqlResToArr(masterSelectRes, 'id', 'product_name'),
+                name: 'productName'
+            },
+            {
+                type: 'input',
+                message: 'How many you want to add?',
+                name: 'amount',
+                validate: UTILZ.validateIfNumber
             }
-            
-            manager();
-        }
-    );
+        ]).then((inqResp) => {
+
+            var getId = inqResp.productName.slice(0, inqResp.productName.indexOf(','));
+
+            var selectQuantityQ = `select stock_quantity from productstb where productstb.id ="${id}"`;
+
+            connection.query(selectQuantityQ, (err, selResp) => {
+                if (err) throw err;
+
+                var updatedQuantity = selResp[0].stock_quantity + parseInt(inqResp.amount);
+
+                var updateStockQ = `update productstb set stock_quantity = "${updatedQuantity}" where productstb.id ="${id}"`;
+
+                connection.query(updateStockQ, (error, updResp) => {
+                    if (error) throw error;
+                    console.log('Success!');
+                    manager();
+                });
+            })
+        });
+    });
 }
 
-function addQuantity(){
-    connection.query(
-        'SELECT id,product_name FROM productstb ORDER BY id',
-        (err, sqlRes) => {
-            if (err) throw err;
-            INQ.prompt([
-                {
-                    type: 'list',
-                    message: 'Which product you would like to stock up?',
-                    choices: UTILZ.sqlResToArr(sqlRes, 'id', 'product_name'),
-                    name: 'productName'
-                },
-                {
-                    type: 'input',
-                    message: 'How many you want to add?',
-                    name: 'amount',
-                    validate: UTILZ.validateIfNumber
-                }
-            ]).then((inqResp) => {
-                var id = inqResp.productName.slice(0, inqResp.productName.indexOf(','));
-                connection.query(
-                    `select stock_quantity from productstb where productstb.id ="${id}"`,
-                    (err, selResp)=>{
-                        if(err) throw err;
-                        var updatedQuantity = selResp[0].stock_quantity + parseInt(inqResp.amount);
-                        console.log(updatedQuantity);
-                        connection.query(
-                            `update productstb set stock_quantity = "${updatedQuantity}" where productstb.id ="${id}"`,
-                            (error, updResp) => {
-                                if (error) throw error;
-                                console.log('Success!');
-                                manager();
-                            }
-                        );
-                    }
-                )
-            });
-        }
-    );
-}
-
-function addProduct(){
+function addProduct() {
     INQ.prompt([
         {
             type: 'input',
@@ -124,22 +116,20 @@ function addProduct(){
             name: 'productQuantity',
             validate: UTILZ.validateIfNumber,
         },
-    ]).then(inqResp=>{
-        connection.query(
-            `insert into 
-            productstb(product_name, department_name, price, stock_quantity) 
+    ]).then(inqResp => {
+
+        var insertProductQ = `insert into productstb(product_name, department_name, price, stock_quantity) 
             values(
                 "${inqResp.productName}", 
                 "${inqResp.productDepartment}", 
                 "${inqResp.productPrice}", 
-                "${inqResp.productQuantity}"
-            )`,
-            (err, insResp)=>{
-                if(err) throw err;
-                console.log("Success!");
-                manager();
-            }
-        );
+                "${inqResp.productQuantity}")`;
+
+        connection.query(insertProductQ, (err, insResp) => {
+            if (err) throw err;
+            console.log("Success!");
+            manager();
+        });
     });
 }
 
