@@ -31,7 +31,7 @@ function manager() {
 }
 
 function showAll() {
-    connection.query('SELECT product_name FROM productstb', (err, selectResp) => {
+    connection.query('SELECT * FROM productstb', (err, selectResp) => {
         if (err) throw err;
         UTILZ.outputTable(selectResp);
         manager();

@@ -60,7 +60,7 @@ function createNewDep() {
         }
     ]).then(inqResp => {
         var addNewDepartmentQ = `insert into departmentstb(department_name, overhead) values("${inqResp.departmentName}",  "${inqResp.overheadCost}")`;
-        connection.query(insertNewDepartmentQ, (err, insertResp) => {
+        connection.query(addNewDepartmentQ, (err, insertResp) => {
             if (err) throw err;
             console.log("Success!");
             superviser();
