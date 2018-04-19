@@ -31,11 +31,13 @@ Manager module works with the same mySQL database to perform duties such as:
 ## Superviser.js
 
 Superviser is the only person that has access to additional table in database that holds information about product departments and can perform two actions:
+
     * `View Product Sales by Department` - the app displays a summarized table in their terminal/bash window. Where `total_profit` column is calculated on the fly using the difference between `over_head_costs` and `product_sales`. `total_profit` is not stored in any database insteada it uses custom alias.
+    
     * `Create New Department` - allows to enter and save new row in departments table.
 
 ![alt-text](gifs/superviserJS.gif)
 
 
 
-**This app was created during the UC Davis Extension coding bootcamp.
+### This app was created during the UC Davis Extension coding bootcamp.
