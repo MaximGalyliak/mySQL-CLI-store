@@ -3,6 +3,7 @@
 CLI store application whritten in JS for Nodejs that works with mySLQ database to process and hold data. 
 
 Dependencies:
+
     * mySQL - to cennect and query mySQL database;
     * inquirer - for user interface;
     * cli-table - to display mySQL responses in table format in terminal;
